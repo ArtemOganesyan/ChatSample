@@ -1,5 +1,3 @@
-package com.portnov.ChatServer;
-
 import java.net.ServerSocket;
 import java.net.Socket;
 
