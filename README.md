@@ -4,7 +4,7 @@ Tasks
 1. Client crash with Exception when server is unavailable. - Gegam
 2. Add welcome banner.\ - Nastia
    |===============================|\
-   |     Welcome to our Chat!      |\
+   |     Welcome to our Chat!      \
    |===============================|
 3. Add timestamps for join/left notifications. - Elena
 4. Implement private messages in the chat (2). - Vitalii/Eugen
