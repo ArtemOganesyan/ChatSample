@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -50,22 +52,28 @@ public class ClientHandler extends Thread {
     }
 
     private void handleCommand(String command) {
-        switch (command.toLowerCase()) {
-            case "ping":
-                out.println("PONG");
-                break;
-            case "time":
-                out.println("Server time: " + System.currentTimeMillis());
-                break;
-            case "list":
-                out.println("Connected clients: " + getClientNames());
-                break;
-            default:
-                out.println("Unknown command: " + command);
-                break;
+        if (command.startsWith("message ")) {
+            String[] parts = command.split(" ", 3);
+            String receiverName = parts[1];
+            String privateMessage = parts[2];
+            sendPrivateMessage(receiverName, privateMessage);
+        } else {
+            switch (command.toLowerCase()) {
+                case "ping":
+                    out.println("PONG");
+                    break;
+                case "time":
+                    out.println("Server time: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                    break;
+                case "list":
+                    out.println("Connected clients: " + getClientNames());
+                    break;
+                default:
+                    out.println("Unknown command: " + command);
+                    break;
+            }
         }
     }
-
     private void broadcastMessage(String message) {
         for (ClientHandler client : clients) {
             if (client != this) {
@@ -83,5 +91,15 @@ public class ClientHandler extends Thread {
             clientNames.append(client.clientName);
         }
         return clientNames.toString();
+    }
+    private void sendPrivateMessage(String receiverName, String message) {
+        for (ClientHandler client : clients) {
+            if (client.clientName.equalsIgnoreCase(receiverName)) {
+                client.out.println("Private message from " + clientName + ": " + message);
+                out.println("Private message to " + receiverName + ": " + message);
+                return;
+            }
+        }
+        out.println("User " + receiverName + " not found.");
     }
 }
