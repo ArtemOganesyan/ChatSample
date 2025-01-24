@@ -37,7 +37,7 @@ public class ChatClient {
                 out.println(userInput);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Server not connected : " + e.getMessage());
         }
     }
 }
