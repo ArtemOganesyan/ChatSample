@@ -1,5 +1,3 @@
-
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -16,10 +14,19 @@ public class ClientHandler extends Thread {
     private String clientName;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    private List<String> clientMessages = new CopyOnWriteArrayList<>();
 
     public ClientHandler(Socket socket) {
         this.clientSocket = socket;
         clients.add(this);
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public List<String> getClientMessages() {
+        return clientMessages;
     }
 
     @Override
@@ -41,6 +48,8 @@ public class ClientHandler extends Thread {
                     handleCommand(message.substring(1));
                 } else {
                     System.out.println(clientName + ": " + message);
+                    clientMessages.add(message);
+                    Utility.saveChatsToLogFile(clients, "chatLog.txt");
                     broadcastMessage(clientName + ": " + message);
                 }
             }
@@ -71,6 +80,13 @@ public class ClientHandler extends Thread {
                 break;
             case "list":
                 out.println("Connected clients: " + getClientNames());
+                break;
+            case "log":
+                out.println("Chat log:");
+                Utility.loadChatsFromLogFile("chatLog.txt").forEach(out::println);
+                for (String message : clientMessages) {
+                    out.println(clientName + ": " + message);
+                }
                 break;
             default:
                 out.println("Unknown command: " + command);
