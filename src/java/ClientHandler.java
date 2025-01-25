@@ -4,12 +4,16 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ClientHandler extends Thread {
     private static final List<ClientHandler> clients = new CopyOnWriteArrayList<>();
     private Socket clientSocket;
     private PrintWriter out;
     private String clientName;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     private List<String> clientMessages = new CopyOnWriteArrayList<>();
 
     public ClientHandler(Socket socket) {
@@ -32,8 +36,11 @@ public class ClientHandler extends Thread {
 
             // Read the client's name
             clientName = in.readLine();
-            System.out.println(clientName + " has joined the chat.");
-            broadcastMessage(clientName + " has joined the chat.");
+//            System.out.println(clientName + " has joined the chat.");
+//            broadcastMessage(clientName + " has joined the chat.");
+            String joinMessage = getCurrentTimestamp() + " " + clientName + " has joined the chat.";
+            System.out.println(joinMessage);
+            broadcastMessage(joinMessage);
 
             String message;
             while ((message = in.readLine()) != null) {
@@ -54,9 +61,12 @@ public class ClientHandler extends Thread {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            clients.remove(this);
-            System.out.println(clientName + " has left the chat.");
-            broadcastMessage(clientName + " has left the chat.");
+//            clients.remove(this);
+//            System.out.println(clientName + " has left the chat.");
+//            broadcastMessage(clientName + " has left the chat.");
+            String joinMessage = getCurrentTimestamp() + " " + clientName + " has left the chat.";
+            System.out.println(joinMessage);
+            broadcastMessage(joinMessage);
         }
     }
 
@@ -101,5 +111,8 @@ public class ClientHandler extends Thread {
             clientNames.append(client.clientName);
         }
         return clientNames.toString();
+    }
+    private String getCurrentTimestamp() {
+        return LocalDateTime.now().format(formatter);
     }
 }
