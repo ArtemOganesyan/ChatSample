@@ -71,29 +71,35 @@ public class ClientHandler extends Thread {
     }
 
     private void handleCommand(String command) {
-        switch (command.toLowerCase()) {
-            case "ping":
-                out.println("PONG");
-                break;
-            case "time":
-                out.println("Server time: " + System.currentTimeMillis());
-                break;
-            case "list":
-                out.println("Connected clients: " + getClientNames());
-                break;
-            case "log":
-                out.println("Chat log:");
-                Utility.loadChatsFromLogFile("chatLog.txt").forEach(out::println);
-                for (String message : clientMessages) {
-                    out.println(clientName + ": " + message);
-                }
-                break;
-            default:
-                out.println("Unknown command: " + command);
-                break;
+        if (command.startsWith("message ")) {
+            String[] parts = command.split(" ", 3);
+            String receiverName = parts[1];
+            String privateMessage = parts[2];
+            sendPrivateMessage(receiverName, privateMessage);
+        } else {
+            switch (command.toLowerCase()) {
+                case "ping":
+                    out.println("PONG");
+                    break;
+                case "time":
+                    out.println("Server time: " + System.currentTimeMillis());
+                    break;
+                case "list":
+                    out.println("Connected clients: " + getClientNames());
+                    break;
+                case "log":
+                    out.println("Chat log:");
+                    Utility.loadChatsFromLogFile("chatLog.txt").forEach(out::println);
+                    for (String message : clientMessages) {
+                        out.println(clientName + ": " + message);
+                    }
+                    break;
+                default:
+                    out.println("Unknown command: " + command);
+                    break;
+            }
         }
     }
-
     private void broadcastMessage(String message) {
         for (ClientHandler client : clients) {
             if (client != this) {
@@ -114,5 +120,15 @@ public class ClientHandler extends Thread {
     }
     private String getCurrentTimestamp() {
         return LocalDateTime.now().format(formatter);
+    }
+    private void sendPrivateMessage(String receiverName, String message) {
+        for (ClientHandler client : clients) {
+            if (client.clientName.equalsIgnoreCase(receiverName)) {
+                client.out.println("Private message from " + clientName + ": " + message);
+                out.println("Private message to " + receiverName + ": " + message);
+                return;
+            }
+        }
+        out.println("User " + receiverName + " not found.");
     }
 }
