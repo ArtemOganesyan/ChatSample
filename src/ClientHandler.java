@@ -1,3 +1,4 @@
+import java.Utility;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -82,7 +83,7 @@ public class ClientHandler extends Thread {
                     out.println("PONG");
                     break;
                 case "time":
-                    out.println("Server time: " + System.currentTimeMillis());
+                    out.println("Server time: " + getServerTime());
                     break;
                 case "list":
                     out.println("Connected clients: " + getClientNames());
@@ -130,5 +131,8 @@ public class ClientHandler extends Thread {
             }
         }
         out.println("User " + receiverName + " not found.");
+    }
+    private String getServerTime() {
+        return LocalDateTime.now().format(formatter);
     }
 }
