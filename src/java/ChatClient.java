@@ -9,7 +9,6 @@ import java.net.Socket;
 public class ChatClient {
     private static final String SERVER_ADDRESS = "54.234.135.255"; // Server address
     private static final int SERVER_PORT = 10100; // Server port
-//    54.234.135.255
 
     public static void main(String[] args) {
         try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
@@ -18,8 +17,8 @@ public class ChatClient {
              BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in))) {
 
             System.out.println("|===============================|\n" +
-                    "|      Welcome to our Chat!     |\n" +
-                    "|===============================|");
+                               "|      Welcome to our Chat!     |\n" +
+                               "|===============================|");
             System.out.println("Enter your name: ");
             String clientName = stdIn.readLine();
             out.println(clientName);
