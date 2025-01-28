@@ -98,65 +98,65 @@ public class ClientHandler extends Thread {
                     out.println("Unknown command: " + command);
                     break;
             }
-        if (command.startsWith("message ")) {
-            String[] parts = command.split(" ", 3);
+            if (command.startsWith("message ")) {
+                String[] parts = command.split(" ", 3);
 
-            String receiverName = parts[1];
-            String message = parts[2];
-            privateMessage(receiverName, message);
-        }
-        else {
-            switch (command.toLowerCase()) {
-                case "ping":
-                    out.println("PONG");
-                    break;
-                case "time":
-                    out.println("Server time: " + System.currentTimeMillis());
-                    break;
-                case "list":
-                    out.println("hello");
-                    out.println("Connected clients: " + getClientNames());
-                    break;
+                String receiverName = parts[1];
+                String message = parts[2];
+                sendPrivateMessage(receiverName, message);
+            } else {
+                switch (command.toLowerCase()) {
+                    case "ping":
+                        out.println("PONG");
+                        break;
+                    case "time":
+                        out.println("Server time: " + System.currentTimeMillis());
+                        break;
+                    case "list":
+                        out.println("hello");
+                        out.println("Connected clients: " + getClientNames());
+                        break;
 
-                default:
-                    out.println("Unknown command: " + command);
-                    break;
+                    default:
+                        out.println("Unknown command: " + command);
+                        break;
+                }
             }
         }
     }
 
-    private void broadcastMessage(String message) {
-        for (ClientHandler client : clients) {
-            if (client != this) {
-                client.out.println(message);
+        private void broadcastMessage(String message){
+            for (ClientHandler client : clients) {
+                if (client != this) {
+                    client.out.println(message);
+                }
             }
         }
-    }
 
-    private String getClientNames() {
-        StringBuilder clientNames = new StringBuilder();
-        for (ClientHandler client : clients) {
-            if (clientNames.length() > 0) {
-                clientNames.append(", ");
+        private String getClientNames() {
+            StringBuilder clientNames = new StringBuilder();
+            for (ClientHandler client : clients) {
+                if (clientNames.length() > 0) {
+                    clientNames.append(", ");
+                }
+                clientNames.append(client.clientName);
             }
-            clientNames.append(client.clientName);
+            return clientNames.toString();
         }
-        return clientNames.toString();
-    }
-    private String getCurrentTimestamp() {
-        return LocalDateTime.now().format(formatter);
-    }
-    private void sendPrivateMessage(String receiverName, String message) {
-        for (ClientHandler client : clients) {
-            if (client.clientName.equalsIgnoreCase(receiverName)) {
-                client.out.println("Private message from " + clientName + ": " + message);
-                out.println("Private message to " + receiverName + ": " + message);
-                return;
+        private String getCurrentTimestamp() {
+            return LocalDateTime.now().format(formatter);
+        }
+        private void sendPrivateMessage(String receiverName, String message){
+            for (ClientHandler client : clients) {
+                if (client.clientName.equalsIgnoreCase(receiverName)) {
+                    client.out.println("Private message from " + clientName + ": " + message);
+                    out.println("Private message to " + receiverName + ": " + message);
+                    return;
+                }
             }
+            out.println("User " + receiverName + " not found.");
         }
-        out.println("User " + receiverName + " not found.");
+        private String getServerTime() {
+            return LocalDateTime.now().format(formatter);
+        }
     }
-    private String getServerTime() {
-        return LocalDateTime.now().format(formatter);
-    }
-}

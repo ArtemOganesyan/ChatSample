@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ChatClient {
-    private static final String SERVER_ADDRESS = "54.234.135.255"; // Server address
+    private static final String SERVER_ADDRESS = "localhost"; // Server address
     private static final int SERVER_PORT = 10100; // Server port
 
     public static void main(String[] args) {
