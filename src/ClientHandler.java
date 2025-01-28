@@ -158,15 +158,5 @@ public class ClientHandler extends Thread {
     }
     private String getServerTime() {
         return LocalDateTime.now().format(formatter);
-
-    private void privateMessage(String receiverName, String message) {
-        for (ClientHandler client : clients) {
-            if (client.clientName.equals(receiverName)) {
-                client.out.println("Private message from " + clientName + ": " + message);
-                out.println("Private message to " + receiverName + ": " + message);
-                return;
-            }
-        }
-        out.println("User " + receiverName + " not found.");
     }
 }
