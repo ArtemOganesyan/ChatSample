@@ -11,3 +11,5 @@ Tasks
 5. Add chat log to save everything in the servers log file. - Vladislav
 6. Create command that shows log contents in the chat. - Gegam
 7. Server time is shown in Unix format, change it to full Date/Time - Nastia
+
+Project notes
