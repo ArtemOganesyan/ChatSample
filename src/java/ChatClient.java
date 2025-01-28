@@ -30,7 +30,7 @@ public class ChatClient {
                         System.out.println(response);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    System.out.println("Server closed the connection: " + e.getMessage());
                 }
             }).start();
 

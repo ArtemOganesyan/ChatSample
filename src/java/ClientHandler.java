@@ -54,12 +54,12 @@ public class ClientHandler extends Thread {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
         } finally {
             try {
                 clientSocket.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println("Error closing client socket: " + e.getMessage());
             }
 //            clients.remove(this);
 //            System.out.println(clientName + " has left the chat.");
