@@ -12,4 +12,6 @@ Tasks
 6. Create command that shows log contents in the chat. - Gegam
 7. Server time is shown in Unix format, change it to full Date/Time - Nastia
 
-Project notes 1
+Additional text 1
+Project notes 100
+
