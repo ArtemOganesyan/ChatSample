@@ -4,7 +4,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ChatServer {
-    private static final int PORT = 10100;
+    private static final int PORT = 10100; // Server port number 10100
 
     public static void main(String[] args) {
         System.out.println("Chat server started...");
@@ -15,7 +15,7 @@ public class ChatServer {
                 new ClientHandler(clientSocket).start();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e.getMessage());
         }
     }
 }
