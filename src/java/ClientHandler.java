@@ -94,6 +94,18 @@ public class ClientHandler extends Thread {
                         out.println(clientName + ": " + message);
                     }
                     break;
+                case "exit":
+                    out.println("Exiting chat...");
+                    try {
+                        clientSocket.close();
+                    } catch (Exception e) {
+                        System.out.println("Error closing client socket: " + e.getMessage());
+                    }
+                    clients.remove(this);
+                    String leaveMessage = getCurrentTimestamp() + " " + clientName + " has left the chat.";
+                    System.out.println(leaveMessage);
+                    broadcastMessage(leaveMessage);
+                    break;
                 default:
                     out.println("Unknown command: " + command);
                     break;
