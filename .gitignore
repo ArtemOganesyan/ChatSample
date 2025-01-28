@@ -27,3 +27,4 @@ build/
 
 # Others
 *.swp
+/chatLog.txt
