@@ -91,7 +91,7 @@ public class ClientHandler extends Thread {
                     out.println("Chat log:");
                     Utility.loadChatsFromLogFile("chatLog.txt").forEach(out::println);
                     for (String message : clientMessages) {
-                        out.println(clientName + ": " + message);
+                        out.println(clientName + ": " + message + "     " + getCurrentTimestamp());
                     }
                     break;
                 case "exit":
