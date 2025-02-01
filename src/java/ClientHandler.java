@@ -13,7 +13,6 @@ public class ClientHandler extends Thread {
     private PrintWriter out;
     private String clientName;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     private List<String> clientMessages = new CopyOnWriteArrayList<>();
 
     public ClientHandler(Socket socket) {
@@ -36,8 +35,6 @@ public class ClientHandler extends Thread {
 
             // Read the client's name
             clientName = in.readLine();
-//            System.out.println(clientName + " has joined the chat.");
-//            broadcastMessage(clientName + " has joined the chat.");
             String joinMessage = getCurrentTimestamp() + " " + clientName + " has joined the chat.";
             System.out.println(joinMessage);
             broadcastMessage(joinMessage);
@@ -47,10 +44,13 @@ public class ClientHandler extends Thread {
                 if (message.startsWith("\\")) {
                     handleCommand(message.substring(1));
                 } else {
-                    System.out.println(clientName + ": " + message);
-                    clientMessages.add(message);
-                    Utility.saveChatsToLogFile(clients, "chatLog.txt");
-                    broadcastMessage(clientName + ": " + message);
+                    String formattedMessage = clientName + ": " + message;
+                    System.out.println(formattedMessage);
+                    if (!clientMessages.contains(message)) {
+                        clientMessages.add(message);
+                        Utility.saveChatsToLogFile(clients, "chatLog.JSON");
+                    }
+                    broadcastMessage(formattedMessage);
                 }
             }
         } catch (Exception e) {
@@ -61,9 +61,6 @@ public class ClientHandler extends Thread {
             } catch (Exception e) {
                 System.out.println("Error closing client socket: " + e.getMessage());
             }
-//            clients.remove(this);
-//            System.out.println(clientName + " has left the chat.");
-//            broadcastMessage(clientName + " has left the chat.");
             String joinMessage = getCurrentTimestamp() + " " + clientName + " has left the chat.";
             System.out.println(joinMessage);
             broadcastMessage(joinMessage);
@@ -89,9 +86,10 @@ public class ClientHandler extends Thread {
                     break;
                 case "log":
                     out.println("Chat log:");
-                    Utility.loadChatsFromLogFile("chatLog.txt").forEach(out::println);
-                    for (String message : clientMessages) {
-                        out.println(clientName + ": " + message + "     " + getCurrentTimestamp());
+                    for (ClientHandler client : clients) {
+                        for (String message : client.getClientMessages()) {
+                            out.println(getCurrentTimestamp() + "| " + client.getClientName() + ": " + message);
+                        }
                     }
                     break;
                 case "exit":
